@@ -1,0 +1,802 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rosé Reef — The first snorkel brand designed for the camera roll</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --wine:#2a0f18;
+    --wine-2:#3a1623;
+    --rose-bg:#fbe7ec;
+    --blush:#f6d2db;
+    --pink:#d94f74;
+    --pink-hi:#e9799a;
+    --gold:#c6a15b;
+    --ink:#2a0f18;
+    --ink-soft:#6e4452;
+    --cream:#fffaf7;
+    --line:rgba(42,15,24,.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Jost',sans-serif;
+    color:var(--ink);
+    background:var(--rose-bg);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  /* grain overlay */
+  body::after{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.04;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  h1,h2,h3,.serif{font-family:'Fraunces',serif}
+  .italic{font-style:italic}
+  .eyebrow{
+    font-family:'Jost',sans-serif;font-weight:500;text-transform:uppercase;
+    letter-spacing:.42em;font-size:.72rem;color:var(--gold);
+  }
+  .eyebrow.intro{font-weight:600;letter-spacing:.34em;color:#9a7320}
+  .star{color:var(--gold)}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+
+  /* ---------- HEADER ---------- */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px clamp(20px,5vw,64px);
+    background:rgba(251,231,236,.72);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+    transition:padding .3s ease;
+  }
+  .brand{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(1.3rem,2.4vw,1.7rem);letter-spacing:.01em;cursor:pointer;line-height:1}
+  nav.main{display:flex;gap:34px;align-items:center}
+  nav.main a{
+    font-size:.74rem;text-transform:uppercase;letter-spacing:.22em;font-weight:400;
+    position:relative;padding:4px 0;cursor:pointer;transition:color .25s;
+  }
+  nav.main a::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--pink);transition:width .3s}
+  nav.main a:hover::after{width:100%}
+  nav.main a:hover{color:var(--pink)}
+  .header-right{display:flex;align-items:center;gap:26px}
+  .cart-btn{position:relative;background:none;border:none;cursor:pointer;color:var(--ink);display:flex;align-items:center;padding:4px}
+  .cart-btn svg{width:24px;height:24px;stroke:var(--ink);fill:none;stroke-width:1.4}
+  .cart-btn:hover svg{stroke:var(--pink)}
+  .cart-count{
+    position:absolute;top:-6px;right:-9px;background:var(--pink);color:#fff;
+    font-size:.62rem;font-weight:500;min-width:17px;height:17px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;padding:0 4px;
+    transform:scale(0);transition:transform .25s cubic-bezier(.34,1.56,.64,1);font-family:'Jost',sans-serif;
+  }
+  .cart-count.show{transform:scale(1)}
+
+  /* ---------- PAGES ---------- */
+  .page{display:none;padding-top:78px}
+  .page.active{display:block;animation:fadeUp .6s ease both}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;min-height:92vh;display:grid;grid-template-columns:1.05fr 1fr;align-items:center;
+    gap:20px;padding:40px clamp(20px,5vw,64px) 60px;overflow:hidden;
+  }
+  /* calm fallback shown only until assets/waves.mp4 exists */
+  #page-home{
+    background:
+      radial-gradient(70% 60% at 85% 8%, rgba(233,121,154,.12), transparent 60%),
+      radial-gradient(60% 60% at 5% 95%, rgba(198,161,91,.10), transparent 60%),
+      linear-gradient(180deg, #fffaf6 0%, #fdeef0 60%, #fbe7ec 100%);
+  }
+  /* waves video fills the whole hero background */
+  .hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden;
+    background:linear-gradient(120deg,#cfe7eb 0%,#eed7dd 58%,#f6e6cf 100%); /* calm-water look until your video is added */
+  }
+  .hero-bg .waves{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  /* light wash so the headline & buttons stay clearly readable over the water */
+  .hero-bg .scrim{position:absolute;inset:0;background:
+    linear-gradient(90deg, rgba(255,250,246,.95) 0%, rgba(255,250,246,.86) 22%, rgba(253,238,240,.45) 45%, rgba(253,238,240,0) 66%);}
+  .hero-copy{position:relative;z-index:2;max-width:560px}
+  /* soft halo keeps text crisp wherever the water is busy */
+  .hero-copy .eyebrow,.hero h1,.hero .tagline{text-shadow:0 1px 16px rgba(255,250,246,.85)}
+  .hero-copy .eyebrow{display:block;margin-bottom:22px;animation:fadeUp .7s .05s both}
+  .hero h1{
+    font-size:clamp(3rem,7.2vw,6rem);line-height:.96;font-weight:330;letter-spacing:-.01em;
+    margin-bottom:8px;animation:fadeUp .7s .12s both;
+  }
+  .hero h1 .ital{font-style:italic;color:var(--pink)}
+  .hero .tagline{
+    font-size:clamp(1rem,1.5vw,1.2rem);line-height:1.5;color:var(--ink);max-width:430px;
+    margin-bottom:38px;font-weight:300;animation:fadeUp .7s .28s both;
+  }
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;animation:fadeUp .7s .36s both}
+  .hero-img{position:relative;z-index:1}
+  .hero-img .frame{
+    position:relative;z-index:1;border-radius:8px;overflow:hidden;
+    border:6px solid rgba(255,255,255,.9);
+    box-shadow:0 40px 90px -28px rgba(42,15,24,.6);transition:transform .6s ease;
+  }
+  .hero-img .frame:hover{transform:scale(1.01)}
+  .hero-img .frame img{width:100%;aspect-ratio:1300/892;object-fit:cover}
+
+  /* ---------- BUTTONS ---------- */
+  .btn{
+    font-family:'Jost',sans-serif;cursor:pointer;border:none;font-size:.78rem;font-weight:500;
+    text-transform:uppercase;letter-spacing:.2em;padding:16px 30px;border-radius:2px;
+    display:inline-flex;align-items:center;gap:10px;transition:transform .25s,box-shadow .25s,background .25s,color .25s;
+  }
+  .btn-primary{background:var(--pink);color:#fff;box-shadow:0 12px 26px -12px rgba(217,79,116,.8)}
+  .btn-primary:hover{background:#c43e64;transform:translateY(-2px);box-shadow:0 18px 34px -12px rgba(217,79,116,.9)}
+  .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+  .btn-ghost:hover{background:var(--ink);color:var(--cream)}
+  .btn-block{width:100%;justify-content:center}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+
+  /* ---------- MANIFESTO ---------- */
+  .manifesto{
+    position:relative;background:var(--wine);color:var(--cream);
+    padding:clamp(80px,12vw,150px) clamp(20px,5vw,64px);overflow:hidden;
+  }
+  .manifesto::before{
+    content:"&";position:absolute;font-family:'Fraunces',serif;font-style:italic;
+    font-size:60vw;color:rgba(255,255,255,.025);right:-6vw;top:50%;transform:translateY(-50%);
+    line-height:.7;pointer-events:none;
+  }
+  .manifesto-inner{position:relative;z-index:2;max-width:880px;margin:0 auto;text-align:center}
+  .manifesto .eyebrow{display:block;margin-bottom:28px}
+  .manifesto h2{font-size:clamp(2.4rem,6vw,4.6rem);font-weight:330;line-height:1.02;margin-bottom:34px}
+  .manifesto h2 .ital{font-style:italic;color:var(--pink-hi)}
+  .manifesto p{
+    font-family:'Fraunces',serif;font-size:clamp(1.05rem,1.9vw,1.45rem);line-height:1.65;
+    font-weight:300;color:rgba(255,250,247,.85);max-width:680px;margin:0 auto;
+  }
+  .manifesto .em{color:var(--pink-hi);font-style:italic}
+  .divider{width:46px;height:1px;background:var(--gold);margin:54px auto}
+
+  /* ---------- ENGINEERED + 3 BLOCKER ---------- */
+  .engineered{background:transparent;padding:clamp(70px,9vw,120px) clamp(20px,5vw,64px) 30px;text-align:center}
+  .engineered .eyebrow{display:block;margin-bottom:18px}
+  .engineered h2{font-size:clamp(2rem,4.6vw,3.4rem);font-weight:330;line-height:1.05}
+  .engineered h2 .ital{font-style:italic;color:var(--pink)}
+  .blocks{
+    max-width:1180px;margin:clamp(40px,6vw,70px) auto 0;display:grid;
+    grid-template-columns:repeat(3,1fr);gap:22px;padding-bottom:clamp(60px,8vw,110px);
+  }
+  .block{
+    background:var(--cream);border-radius:5px;padding:clamp(30px,4vw,52px) clamp(22px,3vw,38px);
+    text-align:center;box-shadow:0 22px 50px -34px rgba(42,15,24,.5);
+    transition:transform .4s ease,box-shadow .4s ease;
+  }
+  .block:hover{transform:translateY(-8px);box-shadow:0 34px 60px -34px rgba(42,15,24,.6)}
+  .block .ic{font-size:2.4rem;line-height:1;margin-bottom:22px;display:block}
+  .block h3{font-family:'Fraunces',serif;font-size:clamp(1.3rem,2.2vw,1.7rem);font-weight:400;margin-bottom:16px}
+  .block p{font-family:'Fraunces',serif;font-style:italic;color:var(--ink-soft);line-height:1.6;font-size:1.02rem}
+
+  /* ---------- SIGNUP (dark, matches screenshot) ---------- */
+  .signup{
+    position:relative;background:var(--wine);color:var(--cream);overflow:hidden;
+    padding:clamp(70px,10vw,120px) clamp(20px,5vw,64px);
+  }
+  .signup::before{
+    content:"&#100;2";position:absolute;font-family:'Fraunces',serif;
+    font-size:42vw;color:rgba(255,255,255,.03);left:30%;top:50%;transform:translateY(-46%);
+    line-height:.7;pointer-events:none;letter-spacing:-.04em;
+  }
+  .signup-grid{position:relative;z-index:2;max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,7vw,90px);align-items:center}
+  .signup .eyebrow{display:block;margin-bottom:24px}
+  .signup h2{font-size:clamp(2.4rem,5vw,3.8rem);font-weight:330;line-height:1.02;margin-bottom:24px}
+  .signup h2 .ital{font-style:italic;color:var(--pink-hi)}
+  .signup .sub{font-family:'Fraunces',serif;font-style:italic;font-size:clamp(1rem,1.7vw,1.25rem);color:rgba(255,250,247,.7);line-height:1.5;max-width:440px}
+  .signup-form{display:flex;flex-direction:column;gap:16px}
+  .field-dark{
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.16);
+    padding:20px 22px;border-radius:2px;color:var(--cream);font-family:'Jost',sans-serif;
+    font-size:.82rem;letter-spacing:.16em;text-transform:uppercase;transition:border .25s,background .25s;
+  }
+  .field-dark::placeholder{color:rgba(255,250,247,.4);letter-spacing:.16em}
+  .field-dark:focus{outline:none;border-color:var(--pink);background:rgba(255,255,255,.06)}
+  .signup .fineprint{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,250,247,.35);margin-top:4px}
+  .signup-ok{color:var(--pink-hi);font-family:'Fraunces',serif;font-style:italic;font-size:1.1rem;display:none}
+
+  /* ---------- SHOP PAGE ---------- */
+  .shop{max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,80px) clamp(20px,5vw,64px) 100px}
+  .shop-crumb{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:34px}
+  .shop-crumb span{cursor:pointer}
+  .shop-crumb span:hover{color:var(--pink)}
+  .product{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(30px,5vw,70px);align-items:start}
+  .product-img{position:relative;border-radius:6px;overflow:hidden;box-shadow:0 40px 90px -36px rgba(42,15,24,.5)}
+  .product-img img{width:100%;aspect-ratio:1300/892;object-fit:cover}
+  .product-img .badge{position:absolute;top:18px;left:18px;background:var(--cream);font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;padding:9px 14px;border-radius:2px}
+  .product-info .eyebrow{display:block;margin-bottom:16px}
+  .product-info h1{font-size:clamp(2.2rem,4vw,3.2rem);font-weight:330;line-height:1.04;margin-bottom:6px}
+  .product-info .sub{font-family:'Fraunces',serif;font-style:italic;color:var(--ink-soft);font-size:1.15rem;margin-bottom:26px}
+  .price-row{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+  .price-row .amt{font-family:'Fraunces',serif;font-size:2.4rem;line-height:1}
+  .price-row .ship{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+  .ship-note{font-size:.82rem;color:var(--ink-soft);margin-bottom:30px;font-family:'Fraunces',serif;font-style:italic}
+  .feat-list{list-style:none;margin:0 0 36px;border-top:1px solid var(--line)}
+  .feat-list li{
+    display:flex;align-items:center;gap:14px;padding:15px 2px;border-bottom:1px solid var(--line);
+    font-size:.95rem;letter-spacing:.02em;
+  }
+  .feat-list li .star{font-size:.85rem}
+  .qty-row{display:flex;align-items:center;gap:18px;margin-bottom:22px}
+  .qty{display:flex;align-items:center;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+  .qty button{width:42px;height:46px;background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--ink);transition:background .2s}
+  .qty button:hover{background:var(--blush)}
+  .qty span{width:44px;text-align:center;font-family:'Jost',sans-serif;font-size:1rem}
+  .qty-label{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft)}
+
+  /* ---------- CART DRAWER ---------- */
+  .overlay{position:fixed;inset:0;background:rgba(42,15,24,.5);backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s;z-index:200}
+  .overlay.show{opacity:1;visibility:visible}
+  .drawer{
+    position:fixed;top:0;right:0;height:100%;width:min(440px,100%);background:var(--cream);z-index:201;
+    transform:translateX(100%);transition:transform .42s cubic-bezier(.4,0,.1,1);display:flex;flex-direction:column;
+    box-shadow:-30px 0 70px -30px rgba(42,15,24,.4);
+  }
+  .drawer.show{transform:none}
+  .drawer-head{display:flex;align-items:center;justify-content:space-between;padding:26px 28px;border-bottom:1px solid var(--line)}
+  .drawer-head h3{font-family:'Fraunces',serif;font-size:1.4rem;font-weight:400}
+  .close-x{background:none;border:none;cursor:pointer;font-size:1.4rem;color:var(--ink);line-height:1;padding:4px;transition:color .2s}
+  .close-x:hover{color:var(--pink)}
+  .drawer-body{flex:1;overflow-y:auto;padding:10px 28px}
+  .cart-empty{text-align:center;color:var(--ink-soft);font-family:'Fraunces',serif;font-style:italic;font-size:1.1rem;padding:60px 0}
+  .cart-item{display:flex;gap:16px;padding:22px 0;border-bottom:1px solid var(--line)}
+  .cart-item img{width:78px;height:78px;object-fit:cover;border-radius:4px}
+  .cart-item .ci-info{flex:1}
+  .cart-item .ci-info h4{font-family:'Fraunces',serif;font-weight:400;font-size:1.02rem;line-height:1.2;margin-bottom:4px}
+  .cart-item .ci-info .ci-price{font-size:.85rem;color:var(--ink-soft)}
+  .ci-controls{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+  .ci-qty{display:flex;align-items:center;gap:10px}
+  .ci-qty button{width:26px;height:26px;border:1px solid var(--line);background:none;border-radius:2px;cursor:pointer;font-size:.9rem;transition:background .2s}
+  .ci-qty button:hover{background:var(--blush)}
+  .ci-remove{background:none;border:none;cursor:pointer;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);text-decoration:underline;transition:color .2s}
+  .ci-remove:hover{color:var(--pink)}
+  .drawer-foot{padding:22px 28px;border-top:1px solid var(--line)}
+  .summ{display:flex;justify-content:space-between;margin-bottom:8px;font-size:.9rem}
+  .summ.total{font-family:'Fraunces',serif;font-size:1.25rem;margin:14px 0 18px}
+  .summ .muted{color:var(--ink-soft);font-size:.82rem}
+
+  /* ---------- CHECKOUT MODAL ---------- */
+  .modal{
+    position:fixed;inset:0;z-index:300;display:flex;align-items:flex-start;justify-content:center;
+    padding:40px 20px;overflow-y:auto;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;
+  }
+  .modal.show{opacity:1;visibility:visible}
+  .modal-card{
+    background:var(--cream);width:min(640px,100%);border-radius:6px;margin:auto;
+    box-shadow:0 50px 120px -40px rgba(42,15,24,.7);transform:translateY(20px);transition:transform .35s;overflow:hidden;
+  }
+  .modal.show .modal-card{transform:none}
+  .modal-head{display:flex;align-items:center;justify-content:space-between;padding:24px 32px;border-bottom:1px solid var(--line)}
+  .modal-head .eyebrow{margin:0}
+  .modal-head h3{font-family:'Fraunces',serif;font-size:1.5rem;font-weight:400;margin-top:4px}
+  .steps{display:flex;gap:8px;padding:18px 32px 0;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft)}
+  .steps .s{opacity:.4;transition:opacity .3s,color .3s}
+  .steps .s.active{opacity:1;color:var(--pink)}
+  .steps .sep{opacity:.3}
+  .modal-body{padding:24px 32px 32px}
+  .step-pane{display:none}
+  .step-pane.active{display:block;animation:fadeUp .4s ease both}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .form-grid .full{grid-column:1/-1}
+  .input-wrap{display:flex;flex-direction:column;gap:6px}
+  .input-wrap label{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft)}
+  .input-wrap input,.input-wrap select{
+    border:1px solid var(--line);background:#fff;padding:13px 14px;border-radius:2px;
+    font-family:'Jost',sans-serif;font-size:.92rem;color:var(--ink);transition:border .2s;
+  }
+  .input-wrap input:focus,.input-wrap select:focus{outline:none;border-color:var(--pink)}
+  .input-wrap input.err{border-color:#c0392b}
+  .review-line{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:.92rem}
+  .review-line.tot{font-family:'Fraunces',serif;font-size:1.2rem;border-bottom:none;padding-top:16px}
+  .review-ship{background:var(--rose-bg);border-radius:4px;padding:16px 18px;margin:18px 0;font-size:.86rem;line-height:1.5}
+  .review-ship strong{font-weight:500}
+  .stripe-badge{display:flex;align-items:center;gap:8px;justify-content:center;margin-top:14px;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+  .stripe-badge svg{height:18px}
+  .pay-card{border:1px solid var(--line);border-radius:4px;padding:18px;margin-bottom:6px}
+  .pay-card .row{display:flex;gap:14px;margin-top:14px}
+  .confirm{text-align:center;padding:30px 10px}
+  .confirm .check{width:64px;height:64px;border-radius:50%;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 22px}
+  .confirm h3{font-family:'Fraunces',serif;font-size:1.8rem;font-weight:400;margin-bottom:10px}
+  .confirm p{color:var(--ink-soft);line-height:1.6;max-width:380px;margin:0 auto 8px}
+  .err-msg{color:#c0392b;font-size:.8rem;margin-top:6px}
+
+  /* ---------- TOAST ---------- */
+  .toast{
+    position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--wine);color:var(--cream);padding:15px 26px;border-radius:3px;z-index:400;
+    font-size:.82rem;letter-spacing:.1em;opacity:0;transition:opacity .3s,transform .3s;box-shadow:0 18px 40px -16px rgba(42,15,24,.6);
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:var(--wine);color:rgba(255,250,247,.6);padding:48px clamp(20px,5vw,64px);text-align:center}
+  footer .brand{color:var(--cream);margin-bottom:14px;display:inline-block}
+  footer .fnav{display:flex;gap:26px;justify-content:center;margin:18px 0;flex-wrap:wrap}
+  footer .fnav a{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:color .2s}
+  footer .fnav a:hover{color:var(--pink-hi)}
+  footer .copy{font-size:.72rem;letter-spacing:.1em;opacity:.5;margin-top:14px}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media(max-width:880px){
+    nav.main{display:none}
+    .hero{grid-template-columns:1fr;text-align:left;min-height:auto;padding-top:30px}
+    .hero-img{order:-1;margin-bottom:20px}
+    .signup-grid{grid-template-columns:1fr}
+    .product{grid-template-columns:1fr}
+    .blocks{grid-template-columns:1fr;max-width:420px}
+    .form-grid{grid-template-columns:1fr}
+  }
+</style>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <div class="brand" onclick="go('home')">Rosé Reef</div>
+  <nav class="main">
+    <a onclick="go('home')">Home</a>
+    <a onclick="go('home');scrollToId('manifesto')">Manifesto</a>
+    <a onclick="go('shop')">Shop</a>
+    <a onclick="go('home');scrollToId('signup')">Join</a>
+  </nav>
+  <div class="header-right">
+    <button class="cart-btn" onclick="openCart()" aria-label="View cart">
+      <svg viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M6 6 5 2H2"/></svg>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- ============ HOME ============ -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <!-- Waves fill the whole hero background. To use your own footage: save it as
+         assets/waves.mp4 and it plays automatically. For a GIF instead, replace
+         this whole <video>…</video> with: <img class="waves" src="assets/waves.gif" alt=""> -->
+    <div class="hero-bg">
+      <video class="waves" autoplay loop muted playsinline>
+        <source src="assets/waves.mp4" type="video/mp4">
+      </video>
+      <div class="scrim"></div>
+    </div>
+    <div class="hero-copy">
+      <span class="eyebrow intro"><span class="star">&#10022;</span>&nbsp; Introducing The Rosé Reef Collection</span>
+      <h1>Rosé Reef</h1>
+      <p class="tagline">The first snorkel brand designed for the camera roll.</p>
+      <div class="hero-cta">
+        <button class="btn btn-primary" onclick="go('shop')">Shop the Collection</button>
+        <button class="btn btn-ghost" onclick="go('home');scrollToId('manifesto')">Our Manifesto</button>
+      </div>
+    </div>
+    <div class="hero-img">
+      <div class="frame">
+        <img src="assets/product-home.jpg" alt="Rosé Reef crystal snorkel mask and snorkel on the beach">
+      </div>
+    </div>
+  </section>
+
+  <!-- MANIFESTO -->
+  <section class="manifesto" id="manifesto">
+    <div class="manifesto-inner">
+      <span class="eyebrow"><span class="star">&#10022;</span>&nbsp; Our Manifesto</span>
+      <h2>The ocean is your <span class="ital">runway.</span></h2>
+      <p>We believe your snorkel set should be just as intentional as the bikini you spent three months choosing. Rosé Reef was born on the conviction that underwater gear has been <span class="em">tragically unglamorous</span> — until now. Every crystal, every curve, every shade of rosé is designed to be photographed.</p>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <!-- ENGINEERED + 3 BLOCKER -->
+  <section class="engineered">
+    <span class="eyebrow"><span class="star">&#10022;</span>&nbsp; Engineered for the Aesthetic</span>
+    <h2>Beauty that <span class="ital">performs.</span></h2>
+    <div class="blocks">
+      <div class="block">
+        <span class="ic">&#127754;</span>
+        <h3>Tempered Glass Lens</h3>
+        <p>Scratch-resistant tempered glass for a crystal-clear underwater view.</p>
+      </div>
+      <div class="block">
+        <span class="ic">&#127800;</span>
+        <h3>Soft-Touch Silicone</h3>
+        <p>Soft blush silicone skirt for a perfect, comfortable, no-leak seal.</p>
+      </div>
+      <div class="block">
+        <span class="ic">&#128247;</span>
+        <h3>Camera Ready, Always</h3>
+        <p>Designed with the golden-hour content creator in mind. Every angle earns its post.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIGNUP -->
+  <section class="signup" id="signup">
+    <div class="signup-grid">
+      <div>
+        <span class="eyebrow"><span class="star">&#10022;</span>&nbsp; Join the Wave</span>
+        <h2>Be first to the <span class="ital">reef.</span></h2>
+        <p class="sub">New drops. Exclusive edits. Behind-the-scenes from our shoots. Your inbox, elevated.</p>
+      </div>
+      <div>
+        <div class="signup-form" id="signupForm">
+          <input class="field-dark" type="text" id="suName" placeholder="First Name">
+          <input class="field-dark" type="email" id="suEmail" placeholder="Email Address">
+          <button class="btn btn-primary btn-block" onclick="joinList()">Join the List&nbsp; <span class="star" style="color:#fff">&#10022;</span></button>
+          <div class="fineprint">No spam, ever. Unsubscribe anytime.</div>
+        </div>
+        <div class="signup-ok" id="signupOk">You're on the list. Welcome to the reef. <span class="star">&#10022;</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ SHOP ============ -->
+<div class="page" id="page-shop">
+  <section class="shop">
+    <div class="shop-crumb"><span onclick="go('home')">Home</span> &nbsp;/&nbsp; The Rosé Reef Collection</div>
+    <div class="product">
+      <div class="product-img">
+        <span class="badge">The Rosé Reef Collection</span>
+        <img src="assets/product-shop.jpg" alt="Rosé Reef crystal mask and snorkel set">
+      </div>
+      <div class="product-info">
+        <span class="eyebrow"><span class="star">&#10022;</span>&nbsp; The Rosé Reef Collection</span>
+        <h1>The Mask &amp; Snorkel Set</h1>
+        <div class="sub">Crystal-set. Camera-ready. Unapologetically rosé.</div>
+        <div class="price-row">
+          <span class="amt">$59.99</span>
+          <span class="ship">+ Shipping</span>
+        </div>
+        <div class="ship-note">Shipping calculated at checkout.</div>
+        <ul class="feat-list">
+          <li><span class="star">&#10022;</span> Hand-set crystals</li>
+          <li><span class="star">&#10022;</span> Tempered glass lens</li>
+          <li><span class="star">&#10022;</span> Adjustable strap</li>
+          <li><span class="star">&#10022;</span> Soft-touch silicone skirt</li>
+        </ul>
+        <div class="qty-row">
+          <span class="qty-label">Quantity</span>
+          <div class="qty">
+            <button onclick="bumpQty(-1)">&minus;</button>
+            <span id="pdpQty">1</span>
+            <button onclick="bumpQty(1)">+</button>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="addToCart()">Add to Cart &nbsp;&middot;&nbsp; $59.99</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="brand" onclick="go('home')">Rosé Reef</div>
+  <div class="fnav">
+    <a onclick="go('home')">Home</a>
+    <a onclick="go('shop')">Shop the Collection</a>
+    <a onclick="go('home');scrollToId('manifesto')">Manifesto</a>
+    <a onclick="go('home');scrollToId('signup')">Join the Wave</a>
+  </div>
+  <div class="copy">The first snorkel brand designed for the camera roll. &copy; 2026 Rosé Reef. &#10022;</div>
+</footer>
+
+<!-- ============ CART ============ -->
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Your Cart</h3>
+    <button class="close-x" onclick="closeCart()">&times;</button>
+  </div>
+  <div class="drawer-body" id="cartBody"></div>
+  <div class="drawer-foot" id="cartFoot" style="display:none">
+    <div class="summ"><span>Subtotal</span><span id="cartSubtotal">$0.00</span></div>
+    <div class="summ"><span class="muted">Shipping</span><span class="muted">Calculated at checkout</span></div>
+    <div class="summ total"><span>Total</span><span id="cartTotal">$0.00</span></div>
+    <button class="btn btn-primary btn-block" onclick="openCheckout()">Proceed to Checkout</button>
+  </div>
+</aside>
+
+<!-- ============ CHECKOUT MODAL ============ -->
+<div class="modal" id="modal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div>
+        <span class="eyebrow"><span class="star">&#10022;</span>&nbsp; Rosé Reef</span>
+        <h3 id="modalTitle">Checkout</h3>
+      </div>
+      <button class="close-x" onclick="closeCheckout()">&times;</button>
+    </div>
+    <div class="steps" id="steps">
+      <span class="s active" data-step="1">1 · Information</span><span class="sep">—</span>
+      <span class="s" data-step="2">2 · Review</span><span class="sep">—</span>
+      <span class="s" data-step="3">3 · Payment</span>
+    </div>
+    <div class="modal-body">
+
+      <!-- STEP 1: INFO -->
+      <div class="step-pane active" id="pane1">
+        <div class="form-grid">
+          <div class="input-wrap"><label>First Name</label><input id="coFirst" type="text"></div>
+          <div class="input-wrap"><label>Last Name</label><input id="coLast" type="text"></div>
+          <div class="input-wrap full"><label>Email</label><input id="coEmail" type="email"></div>
+          <div class="input-wrap full"><label>Address</label><input id="coAddr" type="text"></div>
+          <div class="input-wrap"><label>City</label><input id="coCity" type="text"></div>
+          <div class="input-wrap"><label>State / Region</label><input id="coState" type="text"></div>
+          <div class="input-wrap"><label>ZIP / Postal</label><input id="coZip" type="text"></div>
+          <div class="input-wrap">
+            <label>Country</label>
+            <select id="coCountry" onchange="recalc()">
+              <option value="US">United States ($5.99)</option>
+              <option value="CA">Canada ($9.99)</option>
+              <option value="INTL">International ($14.99)</option>
+            </select>
+          </div>
+        </div>
+        <div class="err-msg" id="step1Err" style="display:none">Please complete all fields.</div>
+        <button class="btn btn-primary btn-block" style="margin-top:22px" onclick="toReview()">Continue to Review</button>
+      </div>
+
+      <!-- STEP 2: REVIEW -->
+      <div class="step-pane" id="pane2">
+        <div id="reviewItems"></div>
+        <div class="review-ship" id="reviewShipTo"></div>
+        <div class="review-line"><span>Subtotal</span><span id="rvSub">$0.00</span></div>
+        <div class="review-line"><span>Shipping</span><span id="rvShip">$0.00</span></div>
+        <div class="review-line tot"><span>Total</span><span id="rvTotal">$0.00</span></div>
+        <div class="row" style="display:flex;gap:12px;margin-top:22px">
+          <button class="btn btn-ghost" style="flex:1" onclick="setStep(1)">Back</button>
+          <button class="btn btn-primary" style="flex:1.6" onclick="setStep(3)">Continue to Payment</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: PAYMENT (Stripe) -->
+      <div class="step-pane" id="pane3">
+        <div class="pay-card">
+          <div class="input-wrap"><label>Card Number</label><input id="cardNum" type="text" placeholder="4242 4242 4242 4242" maxlength="19" oninput="fmtCard(this)"></div>
+          <div class="row">
+            <div class="input-wrap" style="flex:1"><label>Expiry</label><input id="cardExp" type="text" placeholder="MM / YY" maxlength="7"></div>
+            <div class="input-wrap" style="flex:1"><label>CVC</label><input id="cardCvc" type="text" placeholder="123" maxlength="4"></div>
+          </div>
+        </div>
+        <div class="review-line tot"><span>Total due</span><span id="payTotal">$0.00</span></div>
+        <div class="err-msg" id="step3Err" style="display:none">Please enter your card details.</div>
+        <button class="btn btn-primary btn-block" style="margin-top:18px" id="payBtn" onclick="payNow()">Pay Securely</button>
+        <div class="stripe-badge">
+          <span>Powered by</span>
+          <svg viewBox="0 0 60 25" xmlns="http://www.w3.org/2000/svg" width="44"><path fill="#635bff" d="M59.64 14.28h-8.06c.19 1.93 1.6 2.55 3.2 2.55 1.64 0 2.96-.37 4.05-.95v3.32a8.33 8.33 0 0 1-4.56 1.1c-4.01 0-6.83-2.5-6.83-7.48 0-4.19 2.39-7.52 6.3-7.52 3.92 0 5.96 3.28 5.96 7.5 0 .4-.04 1.26-.06 1.48zm-5.92-5.62c-1.03 0-2.17.73-2.17 2.58h4.25c0-1.85-1.07-2.58-2.08-2.58zM40.95 20.3c-1.44 0-2.32-.6-2.9-1.04l-.02 4.63-4.12.87V5.57h3.76l.08 1.02a4.7 4.7 0 0 1 3.23-1.29c2.9 0 5.62 2.6 5.62 7.4 0 5.23-2.7 7.6-5.65 7.6zM40 8.95c-.95 0-1.54.34-1.97.81l.02 6.12c.4.44.98.79 1.95.79 1.52 0 2.54-1.65 2.54-3.87 0-2.15-1.04-3.85-2.54-3.85zM28.24 5.57h4.13v14.44h-4.13V5.57zm0-4.7L32.37 0v3.36l-4.13.88V.88zm-4.32 9.35v9.79H19.8V5.57h3.7l.12 1.22c1-1.77 3.07-1.41 3.62-1.22v3.79c-.52-.17-2.29-.43-3.32.86zm-8.55 4.72c0 2.43 2.6 1.68 3.12 1.46v3.36c-.55.3-1.54.54-2.89.54a4.15 4.15 0 0 1-4.27-4.24l.02-13.17 4.02-.86v3.54h3.14V9.1h-3.14l-.01 5.84zm-4.91.7c0 2.97-2.31 4.66-5.73 4.66a11.2 11.2 0 0 1-4.46-.93v-3.93c1.38.75 3.1 1.31 4.46 1.31.92 0 1.53-.24 1.53-1C6.16 14.51 0 15.05 0 10.54 0 7.66 2.27 5.9 5.61 5.9c1.4 0 2.79.21 4.19.81v3.88c-1.28-.69-2.91-1.08-4.19-1.08-.87 0-1.41.25-1.41.9 0 1.85 6.2 1.31 6.2 5.34z"/></svg>
+        </div>
+      </div>
+
+      <!-- STEP 4: CONFIRM -->
+      <div class="step-pane" id="pane4">
+        <div class="confirm">
+          <div class="check">&#10003;</div>
+          <h3>Order confirmed</h3>
+          <p>Thank you, <span id="confirmName">friend</span>. Your Rosé Reef Collection is on its way to the reef.</p>
+          <p style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;margin-top:14px">Order #<span id="confirmOrder">RR-0000</span></p>
+          <button class="btn btn-primary" style="margin-top:24px" onclick="finishOrder()">Continue Shopping</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------------- STATE ---------------- */
+const PRICE = 59.99;
+const SHIP = { US:5.99, CA:9.99, INTL:14.99 };
+const PRODUCT = {
+  id:'rose-reef-set',
+  name:'The Rosé Reef Collection',
+  desc:'Crystal Mask & Snorkel Set',
+  price:PRICE,
+  img:'assets/product-shop.jpg'
+};
+let cart = [];      // {qty}
+let pdpQty = 1;
+const money = n => '$' + n.toFixed(2);
+
+/* ---------------- ROUTING ---------------- */
+function go(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  window.scrollTo({top:0,behavior:'instant'});
+  closeCart();
+}
+function scrollToId(id){
+  setTimeout(()=>{ const el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth'}); }, 60);
+}
+
+/* ---------------- PDP QTY ---------------- */
+function bumpQty(d){
+  pdpQty = Math.max(1, pdpQty + d);
+  document.getElementById('pdpQty').textContent = pdpQty;
+}
+
+/* ---------------- CART ---------------- */
+function cartCount(){ return cart.reduce((s,i)=>s+i.qty,0); }
+function cartSubtotal(){ return cart.reduce((s,i)=>s+i.qty*PRODUCT.price,0); }
+
+function addToCart(){
+  const existing = cart.find(i=>i.id===PRODUCT.id);
+  if(existing) existing.qty += pdpQty;
+  else cart.push({...PRODUCT, qty:pdpQty});
+  pdpQty = 1; document.getElementById('pdpQty').textContent = 1;
+  renderCart();
+  showToast('Added to your cart &#10022;');
+  openCart();
+}
+function changeQty(id,d){
+  const it = cart.find(i=>i.id===id); if(!it) return;
+  it.qty += d;
+  if(it.qty<=0) cart = cart.filter(i=>i.id!==id);
+  renderCart();
+}
+function removeItem(id){ cart = cart.filter(i=>i.id!==id); renderCart(); }
+
+function renderCart(){
+  const badge = document.getElementById('cartCount');
+  const n = cartCount();
+  badge.textContent = n;
+  badge.classList.toggle('show', n>0);
+
+  const body = document.getElementById('cartBody');
+  const foot = document.getElementById('cartFoot');
+  if(cart.length===0){
+    body.innerHTML = '<div class="cart-empty">Your cart is empty.<br>The reef awaits.</div>';
+    foot.style.display='none';
+    return;
+  }
+  body.innerHTML = cart.map(it=>`
+    <div class="cart-item">
+      <img src="${it.img}" alt="${it.name}">
+      <div class="ci-info">
+        <h4>${it.name}</h4>
+        <div class="ci-price">${money(it.price)} each</div>
+        <div class="ci-controls">
+          <div class="ci-qty">
+            <button onclick="changeQty('${it.id}',-1)">&minus;</button>
+            <span>${it.qty}</span>
+            <button onclick="changeQty('${it.id}',1)">+</button>
+          </div>
+          <button class="ci-remove" onclick="removeItem('${it.id}')">Remove</button>
+        </div>
+      </div>
+    </div>`).join('');
+  foot.style.display='block';
+  document.getElementById('cartSubtotal').textContent = money(cartSubtotal());
+  document.getElementById('cartTotal').textContent = money(cartSubtotal());
+}
+
+function openCart(){ document.getElementById('drawer').classList.add('show'); document.getElementById('overlay').classList.add('show'); }
+function closeCart(){ document.getElementById('drawer').classList.remove('show'); document.getElementById('overlay').classList.remove('show'); }
+function closeAll(){ closeCart(); }
+
+/* ---------------- CHECKOUT ---------------- */
+function openCheckout(){
+  if(cart.length===0){ showToast('Your cart is empty'); return; }
+  closeCart();
+  setStep(1);
+  document.getElementById('modal').classList.add('show');
+}
+function closeCheckout(){ document.getElementById('modal').classList.remove('show'); }
+
+function setStep(n){
+  for(let i=1;i<=4;i++) document.getElementById('pane'+i).classList.toggle('active', i===n);
+  document.querySelectorAll('#steps .s').forEach(s=>{
+    s.classList.toggle('active', parseInt(s.dataset.step) <= n && n<=3);
+  });
+  const titles = {1:'Information',2:'Review Order',3:'Payment',4:'Confirmed'};
+  document.getElementById('modalTitle').textContent = titles[n];
+}
+
+function shipCost(){ return SHIP[document.getElementById('coCountry').value] || SHIP.US; }
+function recalc(){ /* hook for live updates if needed */ }
+
+function toReview(){
+  const ids=['coFirst','coLast','coEmail','coAddr','coCity','coState','coZip'];
+  let ok=true;
+  ids.forEach(id=>{ const el=document.getElementById(id); const bad=!el.value.trim(); el.classList.toggle('err',bad); if(bad) ok=false; });
+  const email=document.getElementById('coEmail');
+  if(email.value && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value)){ email.classList.add('err'); ok=false; }
+  document.getElementById('step1Err').style.display = ok?'none':'block';
+  if(!ok) return;
+
+  // render review
+  const sub = cartSubtotal(), ship = shipCost();
+  document.getElementById('reviewItems').innerHTML = cart.map(it=>`
+    <div class="review-line"><span>${it.name} &times; ${it.qty}</span><span>${money(it.price*it.qty)}</span></div>`).join('');
+  document.getElementById('reviewShipTo').innerHTML =
+    `<strong>Shipping to:</strong><br>${document.getElementById('coFirst').value} ${document.getElementById('coLast').value}<br>`+
+    `${document.getElementById('coAddr').value}, ${document.getElementById('coCity').value}, `+
+    `${document.getElementById('coState').value} ${document.getElementById('coZip').value}`;
+  document.getElementById('rvSub').textContent = money(sub);
+  document.getElementById('rvShip').textContent = money(ship);
+  document.getElementById('rvTotal').textContent = money(sub+ship);
+  document.getElementById('payTotal').textContent = money(sub+ship);
+  setStep(2);
+}
+
+function fmtCard(el){
+  let v = el.value.replace(/\D/g,'').slice(0,16);
+  el.value = v.replace(/(.{4})/g,'$1 ').trim();
+}
+
+function payNow(){
+  const num=document.getElementById('cardNum').value.replace(/\s/g,'');
+  const exp=document.getElementById('cardExp').value.trim();
+  const cvc=document.getElementById('cardCvc').value.trim();
+  const ok = num.length>=15 && exp.length>=4 && cvc.length>=3;
+  document.getElementById('step3Err').style.display = ok?'none':'block';
+  if(!ok) return;
+
+  const btn=document.getElementById('payBtn');
+  btn.disabled=true; btn.textContent='Processing…';
+
+  /* ===========================================================
+     STRIPE INTEGRATION POINT
+     -----------------------------------------------------------
+     This demo simulates a successful charge. To go live with
+     real payments, replace the setTimeout block below with a
+     call to your backend that creates a Stripe Checkout Session
+     or PaymentIntent, e.g.:
+
+       const stripe = Stripe('pk_live_xxx');           // your publishable key
+       const res = await fetch('/create-checkout-session', {
+         method:'POST',
+         headers:{'Content-Type':'application/json'},
+         body: JSON.stringify({ items: cart, shipping: shipCost() })
+       });
+       const { id } = await res.json();
+       await stripe.redirectToCheckout({ sessionId: id });
+
+     (Card fields above can be replaced by Stripe Elements so
+     raw card data never touches your server — PCI compliant.)
+     =========================================================== */
+  setTimeout(()=>{
+    const order = 'RR-' + Math.floor(1000 + Math.random()*9000);
+    document.getElementById('confirmName').textContent = document.getElementById('coFirst').value || 'friend';
+    document.getElementById('confirmOrder').textContent = order;
+    btn.disabled=false; btn.textContent='Pay Securely';
+    setStep(4);
+  }, 1300);
+}
+
+function finishOrder(){
+  cart = [];
+  renderCart();
+  closeCheckout();
+  go('home');
+  showToast('Thank you for shopping Rosé Reef &#10022;');
+}
+
+/* ---------------- SIGNUP ---------------- */
+function joinList(){
+  const name=document.getElementById('suName').value.trim();
+  const email=document.getElementById('suEmail').value.trim();
+  if(!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
+    showToast('Please enter a valid email'); return;
+  }
+  document.getElementById('signupForm').style.display='none';
+  document.getElementById('signupOk').style.display='block';
+}
+
+/* ---------------- TOAST ---------------- */
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.innerHTML=msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+/* init */
+renderCart();
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeCart(); closeCheckout(); }});
+</script>
